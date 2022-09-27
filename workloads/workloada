@@ -35,3 +35,4 @@ insertproportion=0
 
 requestdistribution=zipfian
 
+core_workload_insertion_retry_limit = 5

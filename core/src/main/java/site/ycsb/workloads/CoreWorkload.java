@@ -23,6 +23,7 @@ import site.ycsb.generator.UniformLongGenerator;
 import site.ycsb.measurements.Measurements;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.*;
 
 /**
@@ -612,12 +613,12 @@ public class CoreWorkload extends Workload {
   @Override
   public boolean doInsert(DB db, Object threadstate) {
     int keynum = keysequence.nextValue().intValue();
-    String dbkey = CoreWorkload.buildKeyName(keynum, zeropadding, orderedinserts);
-    HashMap<String, ByteIterator> values = buildValues(dbkey);
-
     Status status;
     int numOfRetries = 0;
+    SecureRandom secureRandom = new SecureRandom();
     do {
+      String dbkey = CoreWorkload.buildKeyName(keynum, zeropadding, orderedinserts) + secureRandom.nextLong();
+      HashMap<String, ByteIterator> values = buildValues(dbkey);
       status = db.insert(table, dbkey, values);
       if (null != status && status.isOk()) {
         break;
